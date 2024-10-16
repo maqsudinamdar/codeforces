@@ -1,0 +1,4 @@
+.vscode/
+*/*.dsYM
+*.dsYM
+solution
