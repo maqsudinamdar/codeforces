@@ -18,7 +18,18 @@ using namespace std;
 #define pii                 pair<int,int>
 #define rep(i,a,b)          for(int i=a;i<b;i++)
 
-
+int upperBound(int d, vector<int>& a) {
+    int lo = 0, hi = a.size() - 1, mid;
+    while (lo <= hi) {
+        mid = (lo + hi) / 2;
+        if (a[mid] <= d) {
+            lo = mid + 1;
+        } else {
+            hi = mid - 1;
+        }
+    }
+    return hi;
+}
 
 signed main() {
     fast;
@@ -28,16 +39,21 @@ signed main() {
     #endif
     int t; cin >> t;
     while(t--) {
-        int b, c, d; cin >> b >> c >> d;
-        int a = (b ^ d);
-        cout << a << " ";
-        int _d = (a | b) - (a & b);
-        if (_d == d) {
-            cout << a;
-        } else {
-            cout << -1;
+        int n, k, q; 
+        cin >> n >> k >> q;
+        vector<int> a(k + 1, 0), b(k + 1, 0);
+        for (int i = 1; i <= k; i++) cin >> a[i];
+        for (int i = 1; i <= k; i++) cin >> b[i];
+        while (q--) {
+            int d; cin >> d;
+            int i = upperBound(d, a);
+            if (a[i] == d) {
+                cout << b[i] << " ";
+                continue;
+            }
+            int ans = b[i] + (d-a[i])*(b[i+1]-b[i])/(a[i+1]-a[i]);
+            cout << ans << " ";
         }
-        cout << "\n";
         cout << "\n";
     }
     return 0;
