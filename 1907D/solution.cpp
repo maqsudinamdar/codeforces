@@ -18,17 +18,18 @@ using namespace std;
 #define pii                 pair<int,int>
 #define rep(i,a,b)          for(int i=a;i<b;i++)
 
-int upperBound(int d, vector<int>& a) {
-    int lo = 0, hi = a.size() - 1, mid;
-    while (lo <= hi) {
-        mid = (lo + hi) / 2;
-        if (a[mid] <= d) {
-            lo = mid + 1;
-        } else {
-            hi = mid - 1;
-        }
+bool helper(int x, vector<vector<int > >& a) {
+    int n = a.size();
+    int curr_l = 0, curr_r = 0;
+    for (int i = 0; i < n; i++) {
+        int nxt_l = a[i][0], nxt_r = a[i][1];
+
+        curr_l = max(curr_l - x, nxt_l);
+        curr_r = min(curr_r + x, nxt_r);
+
+        if (curr_l > curr_r) return false;
     }
-    return hi;
+    return true;
 }
 
 signed main() {
@@ -39,21 +40,24 @@ signed main() {
     #endif
     int t; cin >> t;
     while(t--) {
-        int n, k, q; 
-        cin >> n >> k >> q;
-        vector<int> a(k + 1, 0), b(k + 1, 0);
-        for (int i = 1; i <= k; i++) cin >> a[i];
-        for (int i = 1; i <= k; i++) cin >> b[i];
-        while (q--) {
-            int d; cin >> d;
-            int i = upperBound(d, a);
-            if (a[i] == d) {
-                cout << b[i] << " ";
-                continue;
-            }
-            int ans = b[i] + (d-a[i])*(b[i+1]-b[i])/(a[i+1]-a[i]);
-            cout << ans << " ";
+        int n; cin >> n;
+        vector<vector<int > > a(n, vector<int>(2)); 
+        int l, r;
+        for (int i = 0; i < n; i++) {
+            cin >> l >> r;
+            a[i][0] = l; a[i][1] = r;
         }
+        int lo = 0, hi = 1e9, mid, ans;
+        while (lo <= hi) {
+            mid = (lo + hi) / 2;
+            if (helper(mid, a)) {
+                ans = mid;
+                hi = mid - 1;
+            } else {
+                lo = mid + 1;
+            }
+        }
+        cout << ans;
         cout << "\n";
     }
     return 0;
